@@ -6,11 +6,13 @@ public class OperatorInterface {
     public Gamepad gamepad1;
     public Gamepad gamepad2;
     
+    public boolean driverWantsShooting = false;
+    public boolean driverIsHoldingShooterButton = false;
+    
     public OperatorInterface(Gamepad gp1, Gamepad gp2) {
         gamepad1 = gp1;
         gamepad2 = gp2;
     }
-    
     
     public float getDriveVertical() {
         return gamepad1.left_stick_y + gamepad2.left_stick_y;
@@ -25,6 +27,7 @@ public class OperatorInterface {
     }
     
     public float getDriveSpeed() {
+//        // left bumper for "slow mode"
 //        return (gamepad1.left_bumper || gamepad2.left_bumper) ? 0.3f : 1f;
         return 1.0f;
     }
@@ -41,16 +44,20 @@ public class OperatorInterface {
         return gamepad1.right_bumper || gamepad2.right_bumper;
     }
     
-    public boolean shooterPowerHigher() {
-        //return gamepad1.y || gamepad2.y;
-        return false;
-    }
-    
-    public boolean shooterPowerLower() {
-        return gamepad1.x || gamepad2.x;
-    }
-    
     public boolean shooterSpin() {
+        boolean shooterButtonNow = gamepad1.dpad_left || gamepad2.dpad_left;
+        // if the shooter button has changed since the last check
+        if (driverIsHoldingShooterButton != shooterButtonNow){
+            driverIsHoldingShooterButton = shooterButtonNow;
+            // Only when the button is pressed, toggle whether shooting is wanted.
+            if(driverIsHoldingShooterButton){
+                driverWantsShooting = !driverWantsShooting;
+            }
+        }
+        return driverWantsShooting;
+    }
+    
+    public boolean gateDown(){
         return (gamepad1.left_trigger > 0) || (gamepad2.left_trigger > 0);
     }
     

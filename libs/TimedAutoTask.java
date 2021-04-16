@@ -27,9 +27,9 @@ public class TimedAutoTask {
             while (System.currentTimeMillis() <= endTime && opModeIsActive.call()) {
                 taskCode.run();
         
-                telemetry.addData("Auto Stage", taskName);
-                telemetry.addData("Timing", (System.currentTimeMillis() - startTime) + " ms/" + (endTime - startTime) + " ms");
-                telemetry.update();
+                //telemetry.addData("Auto Stage", taskName);
+                //telemetry.addData("Timing", (System.currentTimeMillis() - startTime) + " ms/" + (endTime - startTime) + " ms");
+                //telemetry.update();
             }
         } catch (Exception e) { }
     }

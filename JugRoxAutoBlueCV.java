@@ -10,7 +10,7 @@ import java.util.List;
 
 @Autonomous
 
-public class AutoBlueCV extends AutoBase {
+public class JugRoxAutoBlueCV extends AutoBase {
     @Override
     public void ringntAuto() {
         // drive forward from the shooter line to be in front of the wobble goal square
@@ -22,9 +22,6 @@ public class AutoBlueCV extends AutoBase {
         // give the robot a moment to come to a halt
         (new TimedAutoTask(new Runnable() { public void run() {
         }}, opModeActiveCallable, "Wait >:(", telemetry, 250)).run();
-        
-        // drive forward away from the wall slightly
-        autoNav.goForTime(350, 1, 0, 0, 1f);
         
         // put the wobble goal down and bring the arm back in
         (new TimedAutoTask(new Runnable() { public void run() {
@@ -44,43 +41,13 @@ public class AutoBlueCV extends AutoBase {
         
         hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalUpEncoder, true);
         
-        // go on a diagonal to the back-right corner of the field
-        autoNav.goForTime(2950, 0.64f, -1, 0, 1f);
+        autoNav.goForTime(1500, 1, 0, 0, 0.75f);
         
-        // lower and open the wobble goal arm
-        (new TimedAutoTask(new Runnable() { public void run() {
-            hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalDownEncoder, false);
-        }}, opModeActiveCallable, "Lower and Open Wobble Goal Arm", telemetry, 1200)).run();
+        autoNav.goForTime(750, 0, -1, 0, 0.75f);
         
-        // come backwards towards the second wobble goal
-        autoNav.goForTime(1800, -1, 0, 0, 0.25f);
-        
-        // grab the wobble goal
-        (new TimedAutoTask(new Runnable() { public void run() {
-            hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalDownEncoder, true);
-        }}, opModeActiveCallable, "Close Wobble Goal Claw", telemetry, 500)).run();
-        
-        // raise the wobble goal to half-way up
-        (new TimedAutoTask(new Runnable() { public void run() {
-            hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalMiddleEncoder, true);
-        }}, opModeActiveCallable, "Raise Wobble Goal Arm", telemetry, 500)).run();
-        
-        // drive diagonally back to where the wobble goals go, with the second wobble goal
-        autoNav.goForTime(2250, -0.35f, 1, 0, 1f);
-        
-        // lower the wobble goal arm
-        (new TimedAutoTask(new Runnable() { public void run() {
-            hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalDownEncoder, true);
-        }}, opModeActiveCallable, "Lower and Open Wobble Goal Arm", telemetry, 1200)).run();
-        
-        // open the wobble goal claw
-        (new TimedAutoTask(new Runnable() { public void run() {
-            hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalDownEncoder, false);
-        }}, opModeActiveCallable, "Lower and Open Wobble Goal Arm", telemetry, 500)).run();
-        
-        autoNav.goForTime(1000, -1, 0, 0, 0.3f);
+        //autoNav.goForTime(1000, -1, 0, 0, 0.3f);
         // drive slightly away from the wobble goals so we are not touching them
-        autoNav.goForTime(1500, 1, 0, 0, 0.3f);
+        //autoNav.goForTime(1500, 1, 0, 0, 0.3f);
     }
     
     @Override
@@ -114,6 +81,9 @@ public class AutoBlueCV extends AutoBase {
         // drive diagonally to shooting spot
         autoNav.goForTime(2000/*2250*/, 1, 0.5f, 0, 0.5f);
         
+        (new TimedAutoTask(new Runnable() { public void run() {
+        }}, opModeActiveCallable, "Wait >:(", telemetry, 500/*500*/)).run();
+        
         // open the shooter gate
         (new TimedAutoTask(new Runnable() { public void run() {
             hardwareInterface.setPusherPosition(0.2f);
@@ -132,15 +102,15 @@ public class AutoBlueCV extends AutoBase {
         hardwareInterface.stopShooter();
         
         // rotate to face the left side of the field
-        autoNav.goForTime(800, 0, 0, 1, -1f);
-        
-        // drive to the wobble goal spot
-        autoNav.goForTime(1300, 0, -1, 0, 1);
+        autoNav.goForTime(1400, 0, 0, 1, -1f);
         
         // lower wobble goal arm
         (new TimedAutoTask(new Runnable() { public void run() {
             hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalDownEncoder, true);
         }}, opModeActiveCallable, "Lower Wobble Goal", telemetry, 1200)).run();
+        
+        // drive to the wobble goal spot
+        autoNav.goForTime(1000, -1, 0, 0, 0.5f);
         
         // open the wobble goal claw
         (new TimedAutoTask(new Runnable() { public void run() {
@@ -150,37 +120,8 @@ public class AutoBlueCV extends AutoBase {
         // raise the wobble goal arm
         hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalMiddleEncoder, false);
         
-        // gently bump wall
-        
-        // move off wall
-        autoNav.goForTime(750, 1, 0, 0, 0.3f);
-        
-        // move to the second wobble goal
-        autoNav.goForTime(2700, -1f, 1f, 0.3f, 1f);
-        
-        // put the wobble goal arm down
-        hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalDownEncoder, false);
-        
-        // drive back to grab wobble goal
-        autoNav.goForTime(2250, -1, 0, 0, 0.35f);
-        
-        // close the wobble goal claw
-        (new TimedAutoTask(new Runnable() { public void run() {
-            hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalDownEncoder, true);
-        }}, opModeActiveCallable, "Grab Wobble Goal", telemetry, 500)).run();
-        
-        // undo wobble goal translation
-        autoNav.goForTime(2900, -0.8f, 0.73f, 0.3f, -1f);
-        
-        autoNav.goForTime(1700, 0, 0.35f, 0, -1f);
-        
-        // drop the wobble goal
-        (new TimedAutoTask(new Runnable() { public void run() {
-            hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalDownEncoder, false);
-        }}, opModeActiveCallable, "Drop Wobble Goal", telemetry, 500)).run();
-        
-        // move on to the line
-        autoNav.goForTime(1000, 0.50f, 1, 0, 0.55f);
+        // drive to the wobble goal spot
+        autoNav.goForTime(700, 1, 0, 0, 0.5f);
     }
     
     @Override
@@ -214,6 +155,9 @@ public class AutoBlueCV extends AutoBase {
         // drive diagonally to shooting spot
         autoNav.goForTime(2000/*2250*/, 1, 0.5f, 0, 0.5f);
         
+        (new TimedAutoTask(new Runnable() { public void run() {
+        }}, opModeActiveCallable, "Wait >:(", telemetry, 500/*500*/)).run();
+        
         // open the shooter gate
         (new TimedAutoTask(new Runnable() { public void run() {
             hardwareInterface.setPusherPosition(0.2f);
@@ -242,10 +186,7 @@ public class AutoBlueCV extends AutoBase {
         hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalMiddleEncoder, true);
         
         // drive left, towards the goal, to get to where the wobble goal goes
-        autoNav.goForTime(2500, 0, 1, 0, 1);
-        
-        // start lowering the wobble goal arm
-        hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalMiddleDownEncoder, true);
+        autoNav.goForTime(2500, 0.2f, 1, 0, 1);
         
         // open the wobble goal claw
         (new TimedAutoTask(new Runnable() { public void run() {
@@ -257,43 +198,9 @@ public class AutoBlueCV extends AutoBase {
         
         // raise the wobble goal arm
         hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalMiddleEncoder, false);
-        //(new TimedAutoTask(new Runnable() { public void run() {
-        //    hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalMiddleEncoder, false);
-        //}}, opModeActiveCallable, "Raise Wobble Goal", telemetry, 600)).run();
-        
-        // go on a diagonal to the back-right corner, where the 2nd wobble goal is
-        autoNav.goForTime(4350, 0.45f, -1, 0, 1f);
-        
-        // start lowering the wobble goal arm
-        hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalDownEncoder, false);
-        
-        // drive backwards to get to the second wobble goal
-        autoNav.goForTime(2000/*2250*/, -1, 0, 0, 0.25f);
-        
-        // grab the wobble goal
-        (new TimedAutoTask(new Runnable() { public void run() {
-            hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalDownEncoder, true);
-        }}, opModeActiveCallable, "Close Wobble Goal Claw", telemetry, 500)).run();
-        
-        // raise the wobble goal arm
-        hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalMiddleEncoder, true);
-        
-        //move back to the front-left corner of the field
-        autoNav.goForTime(4100, 0.4f, -1, -0.03f, -1f);
-        
-        //// start lowering the wobble goal arm
-        hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalDownEncoder, true);
-        
-        // open the wobble goal claw
-        (new TimedAutoTask(new Runnable() { public void run() {
-        //    hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalDownEncoder, false);
-            hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalDownEncoder, false);
-        }}, opModeActiveCallable, "Drop Wobble Goal", telemetry, 500)).run();
-        
-        hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalUpEncoder, false);
         
         // drive forward-right to be over the line
-        autoNav.goForTime(1750, 0.4f, -1f, 0, 1f);
+        autoNav.goForTime(2250, -0.5f, -1f, 0, 1f);
     }
     
     @Override
@@ -341,5 +248,10 @@ public class AutoBlueCV extends AutoBase {
         //hardwareInterface.stopRingPresenceCheckerThread();
         //hardwareInterface.shooter.setPower(0);
         hardwareInterface.stopShooter();
+        
+        (new TimedAutoTask(new Runnable() { public void run() {
+            // raise the wobble goal arm
+            hardwareInterface.setWobbleGoalArm(RobotConfig.wobbleGoalUpEncoder, true);
+        }}, opModeActiveCallable, "Arm Up", telemetry, 1000)).run();
     }
 }

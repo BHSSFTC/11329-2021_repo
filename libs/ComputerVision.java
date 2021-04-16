@@ -22,10 +22,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.Gyroscope;
 
 public class ComputerVision {
-    private static final String TFOD_MODEL_ASSET = "UltimateGoal.tflite";
-    private static final String LABEL_FIRST_ELEMENT = "Quad";
-    private static final String LABEL_SECOND_ELEMENT = "Single";
-    private static final String VUFORIA_KEY = "Aa3OIg3/////AAABmdLmLx3lSUTHpk9Nvqpb1V6KHl5igGGW89pt95cHqOSXiW0Y/3crX/Iu6MO4twnhyJqTcQ+sWadUeiIaUlArjbhkTbmC1CikrD8l66v9vTsePjIk9EmJZ/Ebs2mtHWhgG5IkdIGLrPWUT/0QYYZFIQ52M5oVftUnDDb6jYzjD2wyyOZlALCsBZaZX2MpDIJZmd+d2xcSkAZWBtXqR4So2qpSxgSsR+KVWP2b+iJY2ySuaQH1rGkyxH+xbNOqoiWSFLcReWjq7qVP64vyzDRfL5FYyAj7z56mjLlCI4Tmpw6D28wWstMxUkkO0DWNQ6sC0ACmGVFRQRsVJI7Tf3ALPGcX0YphDRJjiawU3JxpVQTX";
+    private static final String tfodModelAsset = "UltimateGoal.tflite";
+    private static final String firstElementLabel = "Quad";
+    private static final String secondElementLabel = "Single";
+    private static final String vuforiaKey = "Aa3OIg3/////AAABmdLmLx3lSUTHpk9Nvqpb1V6KHl5igGGW89pt95cHqOSXiW0Y/3crX/Iu6MO4twnhyJqTcQ+sWadUeiIaUlArjbhkTbmC1CikrD8l66v9vTsePjIk9EmJZ/Ebs2mtHWhgG5IkdIGLrPWUT/0QYYZFIQ52M5oVftUnDDb6jYzjD2wyyOZlALCsBZaZX2MpDIJZmd+d2xcSkAZWBtXqR4So2qpSxgSsR+KVWP2b+iJY2ySuaQH1rGkyxH+xbNOqoiWSFLcReWjq7qVP64vyzDRfL5FYyAj7z56mjLlCI4Tmpw6D28wWstMxUkkO0DWNQ6sC0ACmGVFRQRsVJI7Tf3ALPGcX0YphDRJjiawU3JxpVQTX";
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
     private HardwareMap hardwareMap;
@@ -37,7 +37,7 @@ public class ComputerVision {
     public boolean start() {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.vuforiaLicenseKey = vuforiaKey;
         parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -46,22 +46,22 @@ public class ComputerVision {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minimumConfidence = 0.8f;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+        tfod.loadModelFromAsset(tfodModelAsset, firstElementLabel, secondElementLabel);
 
         if (tfod != null) {
             tfod.activate();
-            tfod.setZoom(1, 16.0/9.0);
+            //tfod.setZoom(1, 16.0/9.0);
         } else return false;
         
         return true;
     }
     
     public String getFirstLabel() {
-        return LABEL_FIRST_ELEMENT;
+        return firstElementLabel;
     }
     
     public String getSecondLabel() {
-        return LABEL_SECOND_ELEMENT;
+        return secondElementLabel;
     }
     
     public List<Recognition> getUpdatedRecognitions() {
